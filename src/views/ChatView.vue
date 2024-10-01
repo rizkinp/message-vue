@@ -2,7 +2,7 @@
     <div class="flex items-center justify-center min-h-screen bg-black">
         <div class="w-2/4 flex flex-col justify-center items-center">
             <h2 class="mb-4 text-white">Chat Room</h2>
-            <div ref="chatContainer" class="flex flex-col overflow-y-auto overflow-x-hidden h-96 pr-4 chat-container">
+            <div ref="chatContainer" class="flex flex-col overflow-y-auto overflow-x-hidden h-96 pr-4">
                 <div v-for="message in messages" :key="message.id" class="mb-2">
                     <ChatBuble :name="message.name" :text="message.text" :timestamp="message.createdAt.seconds * 1000"
                         avatar="../assets/person.png" />
@@ -51,7 +51,7 @@ export default {
             }));
             this.$nextTick(() => {
                 const chatContainer = this.$refs.chatContainer;
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+                chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
             });
         });
     },
