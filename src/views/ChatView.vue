@@ -1,10 +1,13 @@
 <template>
     <div class="flex items-center justify-center min-h-screen bg-black">
-        <div class="w-2/4 flex flex-col justify-center items-center">
+        <div class="w-3/4 flex flex-col justify-center items-center">
             <h2 class="mb-4 text-white">Chat Room</h2>
-            <div v-for="message in messages" :key="message.id" class="mb-2">
-                <ChatBuble :name="message.name" :text="message.text" :timestamp="message.createdAt.seconds * 1000"
-                    avatar="../assets/person.png" />
+            <div class="mb-6 flex flex-col overflow-y-auto overflow-x-hidden h-96 pr-4">
+                <!-- Add pr-4 to add padding to the right side -->
+                <div v-for="message in messages" :key="message.id" class="mb-2">
+                    <ChatBuble :name="message.name" :text="message.text" :timestamp="message.createdAt.seconds * 1000"
+                        avatar="../assets/person.png" />
+                </div>
             </div>
             <InputSmall label="Your Name Here.." v-model="name" />
             <InputSmall label="Your Message Here.." v-model="newMessage" />
