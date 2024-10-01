@@ -51,7 +51,9 @@ export default {
             }));
             this.$nextTick(() => {
                 const chatContainer = this.$refs.chatContainer;
-                chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+                if (this.messages.length > 0) {
+                    chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+                }
             });
         });
     },
@@ -64,12 +66,15 @@ export default {
                     createdAt: serverTimestamp(),
                 });
                 this.newMessage = "";
+                this.$nextTick(() => {
+                    const chatContainer = this.$refs.chatContainer;
+                    chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+                });
             }
         },
     },
 };
 </script>
-
 <style>
 .chat-container {
     scroll-behavior: smooth;
