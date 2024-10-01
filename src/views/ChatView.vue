@@ -1,9 +1,8 @@
 <template>
     <div class="flex items-center justify-center min-h-screen bg-black">
-        <div class="w-3/4 flex flex-col justify-center items-center">
+        <div class="w-2/4 flex flex-col justify-center items-center">
             <h2 class="mb-4 text-white">Chat Room</h2>
-            <div class="mb-6 flex flex-col overflow-y-auto overflow-x-hidden h-96 pr-4">
-                <!-- Add pr-4 to add padding to the right side -->
+            <div ref="chatContainer" class="flex flex-col overflow-y-auto overflow-x-hidden h-96 pr-4 chat-container">
                 <div v-for="message in messages" :key="message.id" class="mb-2">
                     <ChatBuble :name="message.name" :text="message.text" :timestamp="message.createdAt.seconds * 1000"
                         avatar="../assets/person.png" />
@@ -50,6 +49,10 @@ export default {
                 id: doc.id,
                 ...doc.data(),
             }));
+            this.$nextTick(() => {
+                const chatContainer = this.$refs.chatContainer;
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            });
         });
     },
     methods: {
@@ -68,5 +71,7 @@ export default {
 </script>
 
 <style>
-/* Tambahkan gaya jika diperlukan */
+.chat-container {
+    scroll-behavior: smooth;
+}
 </style>
