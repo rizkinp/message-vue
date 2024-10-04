@@ -1,11 +1,16 @@
 <template>
     <div class="flex items-center justify-center min-h-screen bg-black">
         <div class="w-2/4 flex flex-col justify-center items-center">
-            <h2 class="mb-4 text-white">Chat Room</h2>
-            <div ref="chatContainer" class="flex flex-col overflow-y-auto overflow-x-hidden h-96 pr-4">
+            <h2 class="mb-4 text-white">Feel Free</h2>
+            <div ref="chatContainer" class="flex flex-col overflow-y-auto overflow-x-hidden h-96 pr-4 relative">
                 <div v-for="message in messages" :key="message.id" class="mb-2">
                     <ChatBuble :name="message.name" :text="message.text" :timestamp="message.createdAt.seconds * 1000"
                         avatar="../assets/person.png" />
+                </div>
+                <div v-if="newMessageAvailable"
+                    class="absolute bottom-0 left-0 w-full bg-red-500 text-white p-2 rounded-lg cursor-pointer"
+                    @click="scrollToBottom">
+                    New Message!
                 </div>
             </div>
             <InputSmall label="Your Name Here.." v-model="name" />
@@ -37,6 +42,8 @@ export default {
             messages: [],
             newMessage: "",
             name: "",
+            newMessageAvailable: false,
+            lastScrollTop: 0,
         };
     },
     created() {
@@ -45,16 +52,14 @@ export default {
         const messagesQuery = query(messagesCollection, orderBy("createdAt"));
 
         onSnapshot(messagesQuery, (snapshot) => {
-            this.messages = snapshot.docs.map((doc) => ({
+            const newMessages = snapshot.docs.map((doc) => ({
                 id: doc.id,
                 ...doc.data(),
             }));
-            this.$nextTick(() => {
-                const chatContainer = this.$refs.chatContainer;
-                if (this.messages.length > 0) {
-                    chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
-                }
-            });
+            if (newMessages.length > this.messages.length) {
+                this.newMessageAvailable = true;
+            }
+            this.messages = newMessages;
         });
     },
     methods: {
@@ -66,17 +71,17 @@ export default {
                     createdAt: serverTimestamp(),
                 });
                 this.newMessage = "";
-                this.$nextTick(() => {
-                    const chatContainer = this.$refs.chatContainer;
-                    chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
-                });
             }
+        },
+        scrollToBottom() {
+            this.newMessageAvailable = false;
+            const chatContainer = this.$refs.chatContainer;
+            chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
         },
     },
 };
 </script>
+
 <style>
-.chat-container {
-    scroll-behavior: smooth;
-}
+/* Tambahkan gaya jika diperlukan */
 </style>
