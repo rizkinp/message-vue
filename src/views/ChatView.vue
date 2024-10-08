@@ -47,7 +47,6 @@ export default {
         };
     },
     created() {
-        console.log('ChatView created');
         const messagesCollection = collection(db, "messages");
         const messagesQuery = query(messagesCollection, orderBy("createdAt"));
 
